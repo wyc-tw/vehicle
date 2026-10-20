@@ -9,7 +9,7 @@
 <link rel="icon" type="image/png" sizes="16x16" href="icons/favicon-16.png">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
 <link rel="manifest" href="manifest.webmanifest">
-<meta name="theme-color" content="#0f0f0f">
+<meta name="theme-color" content="#1b2530">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="vehicle">
@@ -22,6 +22,7 @@ body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 "Noto Sans TC"
 header{position:sticky;top:0;z-index:5;background:var(--ink);color:var(--bg);display:flex;gap:10px;align-items:center;padding:10px 14px}
 header img{border-radius:9px;display:block}
 .sp{flex:1}
+header .ib{width:38px;height:38px;padding:0;display:grid;place-items:center}
 .cars{display:flex;gap:8px;overflow-x:auto;padding:2px 0 12px;margin-bottom:2px;scrollbar-width:none}
 .cars::-webkit-scrollbar{display:none}
 .chip{flex:none;border:1px solid var(--line);background:var(--card);border-radius:20px;padding:7px 16px;cursor:pointer;line-height:1.3;text-align:left}
@@ -38,6 +39,10 @@ input,select,textarea{width:100%;padding:9px;border:1px solid var(--line);border
 header button{background:transparent;color:var(--bg);border:1px solid #fff5;border-radius:6px;padding:7px 10px;width:auto;cursor:pointer}
 label{display:block;font-size:14px;color:var(--mute);margin-top:10px}
 .btn{background:var(--ac);color:#fff;border:0;border-radius:6px;padding:10px 16px;cursor:pointer}
+.btn:disabled{opacity:.35;cursor:default}
+.ord{display:flex;align-items:center;gap:6px;padding:8px 0;border-bottom:1px solid var(--line)}
+.ord span{flex:1}
+.ord button{width:44px;padding:8px 0}
 .btn.ghost{background:none;color:var(--ink);border:1px solid var(--line)}
 .btn.del{background:none;color:var(--warn);border:1px solid var(--warn)}
 .fab{position:fixed;right:18px;bottom:18px;width:56px;height:56px;border-radius:28px;font-size:30px;line-height:1;padding:0;box-shadow:0 3px 10px #0004}
@@ -60,7 +65,7 @@ dialog::backdrop{background:#0007}
 </style>
 </head>
 <body>
-<header><img src="icons/icon-192.png" alt="vehicle" width="36" height="36"><span class="sp"></span><button id="addCar">新增車輛</button><button id="cfgBtn">設定</button></header>
+<header><img src="icons/icon-192.png" alt="vehicle" width="36" height="36"><span class="sp"></span><button class="ib" id="addCar" title="新增車輛" aria-label="新增車輛"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2"/><circle cx="7" cy="17" r="2"/><path d="M9 17h6"/><circle cx="17" cy="17" r="2"/></svg></button><button class="ib" id="cfgBtn" title="設定" aria-label="設定"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button></header>
 <main>
 <div class="cars" id="cars"></div>
 <nav id="nav"><button data-t="log" class="on">紀錄</button><button data-t="stat">統計</button><button data-t="car">車輛資料</button></nav>
@@ -79,10 +84,11 @@ dialog::backdrop{background:#0007}
 <label>項目<input name="項目" required placeholder="例如：機油、煞車來令片、加油"></label>
 <div class="row"><label>里程 (km)<input type="number" inputmode="numeric" name="里程"></label><label>費用 (元)<input type="number" inputmode="decimal" name="費用"></label></div>
 <label id="lLit">公升（加油）<input type="number" step="0.01" inputmode="decimal" name="公升"></label>
-<label>店家<input name="店家"></label>
 <label>備註<textarea name="備註" rows="2"></textarea></label>
 <div class="row"><label>下次里程<input type="number" inputmode="numeric" name="下次里程"></label><label>下次日期<input type="date" name="下次日期"></label></div>
 <div class="acts"><button type="button" class="btn del" id="delRec">刪除</button><button type="button" class="btn ghost" data-close>取消</button><button class="btn">儲存</button></div></form></dialog>
+
+<dialog id="dOrd"><h3>調整車輛順序</h3><div id="ordList"></div><div class="acts"><button type="button" class="btn ghost" data-close>取消</button><button type="button" class="btn" id="saveOrd">儲存順序</button></div></dialog>
 
 <dialog id="dCar"><form method="dialog" id="fCar"><h3>車輛資料</h3>
 <label>名稱（同時是分頁名稱，建立後不可改）<input name="名稱" required></label>
@@ -142,11 +148,11 @@ function render() {
   if (!V.length) { v.innerHTML = '<div class="empty">還沒有車輛，點上方「新增車輛」開始記錄。</div>'; return; }
   if (tab === 'log') {
     v.innerHTML = dueList().map(x => `<div class="due">⚠ ${esc(x)}</div>`).join('') +
-      (R.length ? R.map(r => `<div class="rec" data-id="${esc(r.ID)}"><div><span class="tag">${esc(r.類別)}</span>${esc(r.項目)}<small>${esc(r.日期)}${r.里程 ? ' · ' + n$(r.里程) + ' km' : ''}${r.店家 ? ' · ' + esc(r.店家) : ''}</small>${r.備註 ? `<small>${esc(r.備註)}</small>` : ''}</div><div class="cost">$${n$(r.費用)}</div></div>`).join('') : '<div class="empty">這台車還沒有紀錄，點右下角「+」新增。</div>');
+      (R.length ? R.map(r => `<div class="rec" data-id="${esc(r.ID)}"><div><span class="tag">${esc(r.類別)}</span>${esc(r.項目)}<small>${esc(r.日期)}${r.里程 ? ' · ' + n$(r.里程) + ' km' : ''}</small>${r.備註 ? `<small>${esc(r.備註)}</small>` : ''}</div><div class="cost">$${n$(r.費用)}</div></div>`).join('') : '<div class="empty">這台車還沒有紀錄，點右下角「+」新增。</div>');
   } else if (tab === 'stat') stats(v);
   else {
     const c = vehicle();
-    v.innerHTML = `<div class="box"><h3>${esc(c.名稱)} ${esc(c.車牌)}</h3>${['年份','目前里程','狀態','驗車到期','強制險到期','任意險到期','牌照稅到期'].map(k => `<div>${k}：${esc(c[k]) || '—'}</div>`).join('')}<div class="acts"><button class="btn" id="editCar">編輯</button></div></div>`;
+    v.innerHTML = `<div class="box"><h3>${esc(c.名稱)} ${esc(c.車牌)}</h3>${['年份','目前里程','狀態','驗車到期','強制險到期','任意險到期','牌照稅到期'].map(k => `<div>${k}：${esc(c[k]) || '—'}</div>`).join('')}<div class="acts">${V.length > 1 ? '<button class="btn ghost" id="sortCar">調整順序</button>' : ''}<button class="btn" id="editCar">編輯</button></div></div>`;
   }
 }
 
@@ -185,6 +191,7 @@ $('#fab').onclick = () => openRec();
 $('#view').onclick = e => {
   const c = e.target.closest('.rec');
   if (c) openRec(R.find(r => r.ID === c.dataset.id));
+  if (e.target.id === 'sortCar') openOrder();
   if (e.target.id === 'editCar') { fill($('#fCar'), vehicle()); $('#fCar [name=名稱]').readOnly = true; $('#dCar').showModal(); }
 };
 $('#addCar').onclick = () => { fill($('#fCar'), { 狀態: '使用中' }); $('#fCar [name=名稱]').readOnly = false; $('#dCar').showModal(); };
@@ -208,6 +215,11 @@ $('#fCar').onsubmit = guard(async e => {
   cur = veh.名稱; localStorage.setItem('vehicle-cur', cur);
   $('#dCar').close(); toast('已儲存'); await loadAll();
 });
+let ord = [];
+const drawOrd = () => $('#ordList').innerHTML = ord.map((n, i) => `<div class="ord"><span>${esc(n)}</span><button class="btn ghost" data-i="${i}" data-d="-1" ${i === 0 ? 'disabled' : ''}>▲</button><button class="btn ghost" data-i="${i}" data-d="1" ${i === ord.length - 1 ? 'disabled' : ''}>▼</button></div>`).join('');
+function openOrder() { ord = V.map(v => v.名稱); drawOrd(); $('#dOrd').showModal(); }
+$('#ordList').onclick = e => { const b = e.target.closest('button'); if (!b || b.disabled) return; const i = +b.dataset.i, j = i + +b.dataset.d; [ord[i], ord[j]] = [ord[j], ord[i]]; drawOrd(); };
+$('#saveOrd').onclick = guard(async () => { await api('reorder', { names: ord }); $('#dOrd').close(); toast('已儲存'); await loadAll(); });
 loadAll();
 </script>
 </body>
