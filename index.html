@@ -85,7 +85,6 @@ dialog::backdrop{background:#0007}
 <div class="row"><label>里程 (km)<input type="number" inputmode="numeric" name="里程"></label><label>費用 (元)<input type="number" inputmode="decimal" name="費用"></label></div>
 <label id="lLit">公升（加油）<input type="number" step="0.01" inputmode="decimal" name="公升"></label>
 <label>備註<textarea name="備註" rows="2"></textarea></label>
-<div class="row"><label>下次里程<input type="number" inputmode="numeric" name="下次里程"></label><label>下次日期<input type="date" name="下次日期"></label></div>
 <div class="acts"><button type="button" class="btn del" id="delRec">刪除</button><button type="button" class="btn ghost" data-close>取消</button><button class="btn">儲存</button></div></form></dialog>
 
 <dialog id="dOrd"><h3>調整車輛順序</h3><div id="ordList"></div><div class="acts"><button type="button" class="btn ghost" data-close>取消</button><button type="button" class="btn" id="saveOrd">儲存順序</button></div></dialog>
@@ -132,12 +131,6 @@ function dueList() {
   const v = vehicle(), L = [], d = x => Math.ceil((new Date(x) - Date.now()) / 864e5);
   if (!v) return L;
   ['驗車','強制險','任意險','牌照稅'].forEach(k => { const x = v[k + '到期']; if (x && d(x) <= 30) L.push(`${k}到期 ${x}（${d(x) < 0 ? '已過期 ' + -d(x) : '剩 ' + d(x)} 天）`); });
-  const last = {};
-  [...R].reverse().forEach(r => last[r.項目] = r);
-  Object.values(last).forEach(r => {
-    if (r.下次日期 && d(r.下次日期) <= 30) L.push(`${r.項目} 預計 ${r.下次日期}`);
-    if (r.下次里程 && r.下次里程 - v.目前里程 <= 1000) L.push(`${r.項目} 預計 ${n$(r.下次里程)} km（目前 ${n$(v.目前里程)}）`);
-  });
   return L;
 }
 
