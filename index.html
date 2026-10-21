@@ -61,6 +61,7 @@ label{display:block;font-size:14px;color:var(--mute);margin-top:10px}
 .box{background:var(--card);padding:12px 14px;margin-bottom:12px}
 .box h3{margin:0 0 6px;font-size:16px}
 dialog{border:0;border-radius:10px;padding:16px;width:min(94vw,460px);max-height:92vh;background:var(--card);color:var(--ink)}
+dialog h3:focus{outline:none}
 dialog::backdrop{background:#0007}
 .row{display:flex;gap:10px}.row>*{flex:1 1 0;min-width:0}
 .acts{display:flex;gap:8px;margin-top:16px;justify-content:flex-end}
@@ -83,7 +84,7 @@ dialog::backdrop{background:#0007}
 <p style="font-size:13px;color:var(--mute)">網址只存在這台裝置的瀏覽器，不會上傳到 GitHub。手機與電腦各設定一次，請勿外流。</p>
 <div class="acts"><button class="btn">儲存</button></div></form></dialog>
 
-<dialog id="dRec"><form method="dialog" id="fRec"><h3 id="tRec">新增紀錄</h3><input type="hidden" name="ID">
+<dialog id="dRec"><form method="dialog" id="fRec"><h3 id="tRec" tabindex="-1" autofocus>新增紀錄</h3><input type="hidden" name="ID">
 <div class="row"><label>日期<input type="date" name="日期" required></label><label>類別<select name="類別" id="cat"></select></label></div>
 <label>項目<input name="項目" required placeholder="例如：機油、煞車來令片、加油"></label>
 <div class="row"><label>里程 (km)<input type="number" inputmode="numeric" name="里程"></label><label>費用 (元)<input type="number" inputmode="decimal" name="費用"></label></div>
@@ -93,7 +94,7 @@ dialog::backdrop{background:#0007}
 
 <dialog id="dOrd"><h3>調整車輛順序</h3><div id="ordList"></div><div class="acts"><button type="button" class="btn ghost" data-close>取消</button><button type="button" class="btn" id="saveOrd">儲存順序</button></div></dialog>
 
-<dialog id="dCar"><form method="dialog" id="fCar"><h3>車輛資料</h3>
+<dialog id="dCar"><form method="dialog" id="fCar"><h3 tabindex="-1" autofocus>車輛資料</h3>
 <label>名稱（同時是分頁名稱，建立後不可改）<input name="名稱" required></label>
 <div class="row"><label>車牌<input name="車牌"></label><label>年份<input name="年份" type="number"></label></div>
 <div class="row"><label>目前里程<input name="目前里程" type="number"></label><label>狀態<select name="狀態"><option>使用中</option><option>停用</option></select></label></div>
@@ -177,6 +178,7 @@ function openRec(r) {
   $('#delRec').style.display = e ? '' : 'none';
   lit();
   $('#dRec').showModal();
+  if (document.activeElement && document.activeElement.matches('input,select,textarea')) document.activeElement.blur();
 }
 const lit = () => $('#lLit').style.display = $('#cat').value === '加油' ? '' : 'none';
 
